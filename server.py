@@ -5,7 +5,7 @@ import functools
 import logging
 import json
 import uuid
-import random
+
 
 from tornado.ioloop import IOLoop, PeriodicCallback
 from tornado.web import RequestHandler, Application
@@ -13,8 +13,8 @@ from tornado.websocket import WebSocketHandler
 
 
 logging.basicConfig(level=logging.INFO,
-format = '%(asctime)s - %(message)s',
-datefmt = '%Y-%m-%d %H:%M:%S')
+format='%(asctime)s - %(message)s',
+datefmt='%Y-%m-%d %H:%M:%S')
 
 
 LISTENERS = []
@@ -24,17 +24,18 @@ ioloop = IOLoop.instance()
 
 def send_message(data):
     logging.debug('sending message to listeners: %s' % repr(data))
+    msg = unicode(json.dumps(data))
     for i in LISTENERS:
-        i.write_message(unicode(json.dumps(data)))
+        i.write_message(msg)
+    #TODO: send to rabbitmq
 
 
 def status_message(_key):
-    for k,v in HOSTS.items():
+    for k, v in HOSTS.items():
         send_message({
             'action': 'stats',
             'key': k,
-            'vms': v,
-        })
+            'vms': v})
 
 
 def create_host():
