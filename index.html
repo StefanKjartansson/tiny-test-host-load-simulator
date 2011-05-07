@@ -6,8 +6,7 @@
 <body>
     <div class="container_12">
         <div class="grid_12 info-header">
-        	<div class="grid_2">Host</div>
-            <div class="grid_2">
+             <div class="grid_1">
                 <a id="addhost" href="#">
                     <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAABl0RVh0
                     U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAJvSURBVDjLpZPrS5NhGIf9W7YvBYOkhlko
@@ -24,6 +23,8 @@
                     u/MilaFJCae1nw2fbz1DnVOxyGTlKeZft/Ff8x1BRssfACjTwQAAAABJRU5ErkJggg==" alt="" />
                 </a>
             </div>
+           
+        	<div class="grid_3" id="hostlabel">Host</div>
             <div class="grid_1">HB</div>
             <div class="grid_4" id="vmlabel">Virtual Machines</div>
             <div class="grid_2">
@@ -189,7 +190,7 @@
         }
 
         div.vm, div.stats {
-            font-size: 85%;
+            font-size: 80%;
         }
     </style>
     <script type="text/javascript" charset="utf-8">
@@ -200,7 +201,8 @@
                     action: 'vm',
                     host: $(this).attr('rel'),
                     so: $('#service-offerings').val()
-                }, function(){}); 
+                    }, function(){}); 
+                return false;
             });
 
             $('#addhost').click(function(){ 
@@ -208,10 +210,13 @@
                 return false;
             });
 
-            var numvms = 0;                 
+            var numvms = 0;                
+            var numhosts = 0;
             var actions = {
-                new_host: function(j) {
+                    new_host: function(j) {
+                    numhosts++;
                     $('#hosts').append($('#host-tmpl').tmpl(j));
+                    $('#hostlabel').text('Host ('+ numhosts +')');
                 },
                 hb: function(j) {
                     $('#' + j.key + '-beat>span')
