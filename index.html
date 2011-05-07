@@ -25,10 +25,12 @@
                 </a>
             </div>
             <div class="grid_1">HB</div>
-            <div class="grid_4">Virtual Machines</div>
+            <div class="grid_4" id="vmlabel">Virtual Machines</div>
             <div class="grid_2">
                 <select id="service-offerings">
-                    <option value="m1.nano">m1.nano</option>
+                    {% for item in offerings %}
+                    <option value="{{item.name}}">{{item.name}}</option>
+                    {% end %}
                 </select>
             </div>
         </div>
@@ -39,7 +41,7 @@
 
     <script id="host-tmpl" type="text/x-jquery-tmpl">
         <div id="${key}" class="host">
-            <div class="grid_4">${key}</div>
+            <div class="grid_4">${key}<div id="${key}-stats" class="stats">&nbsp;</div></div>
             <div class="grid_1" id="${key}-beat">
                 &nbsp;
                 <span style="display:none">
@@ -174,7 +176,7 @@
             border-top-left-radius:5px;
         }
 
-        div.vm {
+        div.vm, div.stats {
             font-size: 85%;
         }
     </style>
@@ -194,6 +196,7 @@
                 return false;
             });
 
+            var numvms = 0;                 
             var actions = {
                 new_host: function(j) {
                     $('#hosts').append($('#host-tmpl').tmpl(j));
@@ -202,11 +205,18 @@
                     $('#' + j.key + '-beat>span')
                         .fadeIn('slow', function() { $(this).hide(); });
                 }, 
-                stats: function(j) {
+                stats: function(j) {                    
+                    $('#'+ j.key+ '-stats').empty().append('usage: ' + j.numcpus + ' cpus <br/> free mem:' + 
+                        j.mem.toFixed(2) + '%');
                 },
                 vm: function(j) {
+                    numvms++;
                     $('#'+ j.key + '-vms>.content').append(
                         $('#vm-tmpl').tmpl(j.vm));
+                    $('#vmlabel').text('Virtual Machines ('+ numvms +')');
+                },
+                capacity: function(j) {                                                      
+                    $('#'+ j.key+ '-stats').after('<div><i>Insufficient capacity</i></div>');
                 }
             }; 
             
