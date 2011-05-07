@@ -206,8 +206,8 @@
                         .fadeIn('slow', function() { $(this).hide(); });
                 }, 
                 stats: function(j) {                    
-                    $('#'+ j.key+ '-stats').empty().append('usage: ' + j.numcpus + ' cpus <br/> free mem:' + 
-                        j.mem.toFixed(2) + '%');
+                           $('#'+ j.key+ '-stats').empty().append('usage: <b>' + j.numcpus + ' cpus</b> <br/> free mem: <b>' + 
+                                   j.mem.toFixed(2) + '% </b>');
                 },
                 vm: function(j) {
                     numvms++;
