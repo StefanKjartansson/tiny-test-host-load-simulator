@@ -5,7 +5,7 @@ import functools
 import logging
 import json
 import uuid
-
+import yaml
 
 from tornado.ioloop import IOLoop, PeriodicCallback
 from tornado.web import RequestHandler, Application
@@ -21,6 +21,51 @@ LISTENERS = []
 HOSTS = {}
 ioloop = IOLoop.instance()
 
+config = yaml.load(open('config.yaml', 'r').read())
+
+
+class Offering(object):
+    def __init__(self, **kwargs):
+        [setattr(self, k, v)
+            for (k, v) in kwargs.items()]
+
+    def __str__(self):
+        return str(self.name)
+
+    def __hash__(self):
+        return hash(str(self))
+
+    def __cmp__(self, other):
+        return cmp(str(self), str(other))
+
+
+offerings = [Offering(**i)
+    for i in config['offerings']]
+offerings_lookup = dict([(str(i), i) for i in offerings])
+
+
+class Host(object):
+    def __init__(self, id):
+        self.id = id
+        self.vms = []
+        self.numcpus = config['host']['numcpus']
+        self.mem = config['host']['mem']
+
+    def __iter__(self):
+        return iter(self.vms)
+
+    def append(self, item):
+        o = offerings_lookup[item['so']]
+        self.numcpus -= o.numcpus
+        self.mem -= o.mem
+        if self.numcpus == 0 or self.mem == 0:
+            send_message({'action': 'capacity',
+                'key': self.id})
+            self.numcpus += o.numcpus
+            self.mem += o.mem
+        else:
+            self.vms.append(item)
+
 
 def send_message(data):
     logging.debug('sending message to listeners: %s' % repr(data))
@@ -35,13 +80,14 @@ def status_message(_key):
         send_message({
             'action': 'stats',
             'key': k,
-            'vms': v})
+            'numcpus': (config['host']['numcpus'] - v.numcpus),
+            'mem': (float(v.mem) / float(config['host']['mem']))*100 })
 
 
 def create_host():
     logging.info('adding host')
     _key = str(uuid.uuid4())
-    HOSTS.update({_key: []})
+    HOSTS.update({_key: Host(_key)})
     send_message({'action': 'new_host', 'key': _key})
 
     cb = functools.partial(send_message,
@@ -63,7 +109,8 @@ class MainHandler(RequestHandler):
     def get(self):
         self.render("index.html",
             title="Host simulator",
-            path='localhost:8888')
+            path='localhost:8888',
+            offerings=offerings)
 
     def post(self):
         action = self.request.arguments['action'][0]
