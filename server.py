@@ -58,7 +58,7 @@ class Host(object):
         o = offerings_lookup[item['so']]
         self.numcpus -= o.numcpus
         self.mem -= o.mem
-        if self.numcpus == 0 or self.mem == 0:
+        if self.numcpus < 0 or self.mem < 0:
             send_message({'action': 'capacity',
                 'key': self.id})
             self.numcpus += o.numcpus
