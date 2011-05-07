@@ -1,0 +1,20 @@
+host:
+    numcpus: 32
+    mem: 32768
+
+offerings:
+    - name: m1.nano
+      numcpus: 1
+      mem: 256        
+    - name: m1.small
+      numcpus: 1
+      mem: 512
+    - name: m1.medium
+      numcpus: 2
+      mem: 1024    
+    - name: m1.large
+      numcpus: 2
+      mem: 2048
+    - name: m1.xlarge
+      numcpus: 4
+      mem: 4096
