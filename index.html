@@ -1,0 +1,219 @@
+<!DOCTYPE>
+<html>
+<head>
+    <title>{{ title }}</title>
+</head>
+<body>
+    <div class="container_12">
+        <div class="grid_12 info-header">
+        	<div class="grid_2">Host</div>
+            <div class="grid_2">
+                <a id="addhost" href="#">
+                    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAABl0RVh0
+                    U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAJvSURBVDjLpZPrS5NhGIf9W7YvBYOkhlko
+                    qCklWChv2WyKik7blnNris72bi6dus0DLZ0TDxW1odtopDs4D8MDZuLU0kXq61CijSIIasOvv94V
+                    TUfLiB74fXngup7nvrnvJABJ/5PfLnTTdcwOj4RsdYmo5glBWP6iOtzwvIKSWstI0Wgx80SBblpK
+                    tE9KQs/We7EaWoT/8wbWP61gMmCH0lMDvokT4j25TiQU/ITFkek9Ow6+7WH2gwsmahCPdwyw75uw
+                    9HEO2gUZSkfyI9zBPCJOoJ2SMmg46N61YO/rNoa39Xi41oFuXysMfh36/Fp0b7bAfWAH6RGi0Hgl
+                    WNCbzYgJaFjRv6zGuy+b9It96N3SQvNKiV9HvSaDfFEIxXItnPs23BzJQd6DDEVM0OKsoVwBG/1V
+                    MzpXVWhbkUM2K4oJBDYuGmbKIJ0qxsAbHfRLzbjcnUbFBIpx/qH3vQv9b3U03IQ/HfFkERTzfFj8
+                    w8jSpR7GBE123uFEYAzaDRIqX/2JAtJbDat/COkd7CNBva2cMvq0MGxp0PRSCPF8BXjWG3FgNHc9
+                    XPT71Ojy3sMFdfJRCeKxEsVtKwFHwALZfCUk3tIfNR8XiJwc1LmL4dg141JPKtj3WUdNFJqLGFVP
+                    C4OkR4BxajTWsChY64wmCnMxsWPCHcutKBxMVp5mxA1S+aMComToaqTRUQknLTH62kHOVEE+VQnj
+                    ahscNCy0cMBWsSI0TCQcZc5ALkEYckL5A5noWSBhfm2AecMAjbcRWV0pUTh0HE64TNf0mczcnnQy
+                    u/MilaFJCae1nw2fbz1DnVOxyGTlKeZft/Ff8x1BRssfACjTwQAAAABJRU5ErkJggg==" alt="" />
+                </a>
+            </div>
+            <div class="grid_1">HB</div>
+            <div class="grid_4">Virtual Machines</div>
+            <div class="grid_2">
+                <select id="service-offerings">
+                    <option value="m1.nano">m1.nano</option>
+                </select>
+            </div>
+        </div>
+        <div id="hosts" class="grid_12">
+            <div class="clear"></div>
+        </div>
+    </div>
+
+    <script id="host-tmpl" type="text/x-jquery-tmpl">
+        <div id="${key}" class="host">
+            <div class="grid_4">${key}</div>
+            <div class="grid_1" id="${key}-beat">
+                &nbsp;
+                <span style="display:none">
+                <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAABl0RVh0
+                U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAJ/SURBVDjLpZNLiI1xGMZ/3/edOWZojjki
+                udbMuEVMM4SMBVlbSUpZyAIhG4qlkcJWycZOSslCMTNFuYVpRrkzLuMy5tA4xulcv//t/Vt80ZTL
+                xltvz7N43vd5F+8TeO/5n0r9JNLTs9A7t8FbO0WsfSvWdtdv2VIAKJ45kxWtt4rWh5xSQ6LUyeld
+                XVcAAu890t29zzt3hPp0ljBCyiVMofhMjNkmWldE64t1U5qWTpjXiiuVqDx8RDX35ZxTalfgrl7d
+                6K2+HC5cQBBGYAyk05jhYWrPX350WpcbWpsX17e0QGEMwgiasnzv7eX7oyfHUmLt3mjWTIJqFXJf
+                wAlYS13zHKKV7XN9rInqG6D/AYgkBo0TyXSuId/Xvz0lxiyJMhkYegfGghdwDl68JpycgSiAwTeA
+                gLYJ5scIWgUXx5mUGJPGOYgVKJUs0CZZMpIDaxNnEfAOlAFxYDSilKRE66K3dlpgDcQ1sC4ZtjbB
+                8dxacBZSIYQhTqkwFKWu28FBmD0TKmWo1SCOwagEdZxgrZYYlEowv4X8jVuIUudDp9SJyodP7+NP
+                I9C2FNJRIipXk4FqDVQM1QrUhbB2FYXRMXJXusdE667Ae0/++PFlotTZhmzjiknLlxOO5mDgCQRB
+                cnq1Cm2L8M3zGO3p5fPte0/FmN0d/f13gp+v/Pnw4clOqQOi1P5sR1tj46wZcPceFMuwdjXFbwXe
+                n7+gRevTYsyxjoGB/K9PHF/vduxY4ZQ61dQ8d/XUDevBWfJ37jJy/eaQaL2z/f79a+P1wZ/C9Grz
+                5ian1FHRek92zozg68s3l0Trg+19fUO/ib33f+3H69ZtetjZuf9fmuB/4/wDFoO2ZVesLdkAAAAA
+                SUVORK5CYII=" alt=""/>
+                </span>
+            </div>
+            <div class="grid_6" id="${key}-vms">
+                <a href="#" rel="${key}" class="addvm">
+                    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAABl0RVh0
+                    U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAJvSURBVDjLpZPrS5NhGIf9W7YvBYOkhlko
+                    qCklWChv2WyKik7blnNris72bi6dus0DLZ0TDxW1odtopDs4D8MDZuLU0kXq61CijSIIasOvv94V
+                    TUfLiB74fXngup7nvrnvJABJ/5PfLnTTdcwOj4RsdYmo5glBWP6iOtzwvIKSWstI0Wgx80SBblpK
+                    tE9KQs/We7EaWoT/8wbWP61gMmCH0lMDvokT4j25TiQU/ITFkek9Ow6+7WH2gwsmahCPdwyw75uw
+                    9HEO2gUZSkfyI9zBPCJOoJ2SMmg46N61YO/rNoa39Xi41oFuXysMfh36/Fp0b7bAfWAH6RGi0Hgl
+                    WNCbzYgJaFjRv6zGuy+b9It96N3SQvNKiV9HvSaDfFEIxXItnPs23BzJQd6DDEVM0OKsoVwBG/1V
+                    MzpXVWhbkUM2K4oJBDYuGmbKIJ0qxsAbHfRLzbjcnUbFBIpx/qH3vQv9b3U03IQ/HfFkERTzfFj8
+                    w8jSpR7GBE123uFEYAzaDRIqX/2JAtJbDat/COkd7CNBva2cMvq0MGxp0PRSCPF8BXjWG3FgNHc9
+                    XPT71Ojy3sMFdfJRCeKxEsVtKwFHwALZfCUk3tIfNR8XiJwc1LmL4dg141JPKtj3WUdNFJqLGFVP
+                    C4OkR4BxajTWsChY64wmCnMxsWPCHcutKBxMVp5mxA1S+aMComToaqTRUQknLTH62kHOVEE+VQnj
+                    ahscNCy0cMBWsSI0TCQcZc5ALkEYckL5A5noWSBhfm2AecMAjbcRWV0pUTh0HE64TNf0mczcnnQy
+                    u/MilaFJCae1nw2fbz1DnVOxyGTlKeZft/Ff8x1BRssfACjTwQAAAABJRU5ErkJggg==" alt="" />
+                </a>
+                <div class="content"></div>
+            </div>
+            <div class="clear"></div>
+        </div> 
+    </script>
+    
+    <script id="vm-tmpl" type="text/x-jquery-tmpl">
+        <div class="vm" id="${key}">
+            ${so} - ${key}
+            <div class="clear"></div>
+        </div>
+    </script>
+
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"></script>
+    <script type="text/javascript" src="//ajax.microsoft.com/ajax/jquery.templates/beta1/jquery.tmpl.min.js"></script>
+    <link rel="stylesheet" href="//cachedcommons.org/cache/960/0.0.0/stylesheets/reset-min.css" /> 
+    <link rel="stylesheet" href="//cachedcommons.org/cache/960/0.0.0/stylesheets/text-min.css" /> 
+    <link rel="stylesheet" href="//cachedcommons.org/cache/960/0.0.0/stylesheets/960-min.css" /> 
+    <style type="text/css">
+        
+        div.host {
+            padding-bottom:4px;
+            min-height:22px;
+        }
+
+        div.host:nth-child(even) {
+            background-color:#444;
+            color:#444;
+            border-bottom:1px solid #444;
+            background:-webkit-gradient(
+                linear,
+                left bottom,
+                left top,
+                color-stop(0.39, rgb(189,189,189)),
+                color-stop(0.7, rgb(224,224,224))
+                );
+            background:-moz-linear-gradient(
+                center bottom,
+                rgb(189,189,189) 39%,
+                rgb(224,224,224) 70%
+                );
+            text-shadow:1px 1px 1px #fff;
+        }
+
+        div.host:nth-child(odd) {
+            background-color:#555;
+            color:#f0f0f0;
+            border-bottom:1px solid #444;
+            background:-webkit-gradient(
+                linear,
+                left bottom,
+                left top,
+                color-stop(0.39, rgb(85,85,85)),
+                color-stop(0.7, rgb(105,105,105))
+                );
+            background:-moz-linear-gradient(
+                center bottom,
+                rgb(85,85,85) 39%,
+                rgb(105,105,105) 70%
+                );
+            text-shadow:1px 1px 1px #000;
+        }
+
+        div.info-header {
+            color:#f8f8f8;
+            border-bottom: 1px dotted #686773;
+
+            background-image: -webkit-gradient(
+                linear,
+                left bottom,
+                left top,
+                color-stop(0.19, rgb(91,97,95)),
+                color-stop(0.65, rgb(23,39,43))
+            );
+            background-image: -moz-linear-gradient(
+                center bottom,
+                rgb(91,97,95) 19%,
+                rgb(23,39,43) 65%
+            );
+            padding-top:7px;
+            padding-bottom:3px;
+            min-height:20px;
+           
+        }
+
+        div.vm {
+            font-size: 85%;
+        }
+    </style>
+    <script type="text/javascript" charset="utf-8">
+        $(document).ready(function(){
+
+            $('.addvm').live('click', function(){ 
+                $.post('./', {
+                    action: 'vm',
+                    host: $(this).attr('rel'),
+                    so: $('#service-offerings').val()
+                }, function(){}); 
+            });
+
+            $('#addhost').click(function(){ 
+                $.post('./', {action: 'host' }, function(){}); 
+                return false;
+            });
+
+            var actions = {
+                new_host: function(j) {
+                    $('#hosts').append($('#host-tmpl').tmpl(j));
+                },
+                hb: function(j) {
+                    $('#' + j.key + '-beat>span')
+                        .fadeIn('slow', function() { $(this).hide(); });
+                }, 
+                stats: function(j) {
+                    /*
+                    $('#'+ j.key + '-vms>.content').empty().append(
+                    $('#vm-tmpl').tmpl(j.vms));
+                    */
+                },
+                vm: function(j) {
+                    $('#'+ j.key + '-vms>.content').append(
+                        $('#vm-tmpl').tmpl(j.vm));
+                }
+            }; 
+            
+            if ("WebSocket" in window) {
+                var ws = new WebSocket("ws://{{path}}/actions/");
+              ws.onopen = function() {};
+              ws.onmessage = function (evt) {
+                  var j = $.parseJSON(evt.data);
+                  if(j && j.action) {
+                      actions[j.action](j);
+                  }
+              };
+              ws.onclose = function() {};
+            } else {
+              alert("WebSocket not supported");
+            }
+        });
+    </script>
+</body>
+</html>

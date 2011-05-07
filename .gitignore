@@ -1,0 +1,8 @@
+*.py[oc]
+*.swp
+*.log
+*.db
+*.tar.gz
+celerybeat-schedule
+env/
+/worker-tasks.iml
